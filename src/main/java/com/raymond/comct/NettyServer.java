@@ -1,5 +1,6 @@
 package com.raymond.comct;
 
+import com.raymond.comct.channelHandler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,7 +23,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-
+                        nioSocketChannel.pipeline().addLast(new ServerHandler());
                     }
                 });
         GenericFutureListener<Future<? super Void>> genericFutureListener = new ServerBindListener(port, serverBootstrap);

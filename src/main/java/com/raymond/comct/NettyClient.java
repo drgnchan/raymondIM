@@ -1,5 +1,6 @@
 package com.raymond.comct;
 
+import com.raymond.comct.channelHandler.ClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,7 +23,7 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-
+                        ch.pipeline().addLast(new ClientHandler());
                     }
                 });
         connect(bootstrap, host, port, MAX_RETRY);
