@@ -9,7 +9,7 @@ public class PacketCodec {
 
     public static PacketCodec INSTANCE = new PacketCodec();
 
-    private static final int MAGIC_NUMBER = 0x88888888;
+    public static final int MAGIC_NUMBER = 0x88888888;
 
     public ByteBuf encode(Packet packet) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();

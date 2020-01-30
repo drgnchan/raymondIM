@@ -1,6 +1,11 @@
 package com.raymond.comct;
 
-import com.raymond.comct.channelHandler.ClientHandler;
+import com.raymond.comct.channelHandler.LoginHandler;
+import com.raymond.comct.channelHandler.LoginResponseHandler;
+import com.raymond.comct.channelHandler.MessageResponseHandler;
+import com.raymond.comct.channelHandler.Spliter;
+import com.raymond.comct.codec.PacketDecoder;
+import com.raymond.comct.codec.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -23,7 +28,12 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new Spliter());
+                        ch.pipeline().addLast(new LoginHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         connect(bootstrap, host, port, MAX_RETRY);
