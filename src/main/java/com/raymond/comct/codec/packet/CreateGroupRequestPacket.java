@@ -3,15 +3,17 @@ package com.raymond.comct.codec.packet;
 import com.raymond.comct.command.Command;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class MessageRequestPacket extends Packet {
+public class CreateGroupRequestPacket extends Packet {
 
-    private String toUserId;
+    private List<String> userIds;
 
-    private String message;
+
 
     @Override
     public Byte getCommand() {
-        return Command.MSG_REQUEST;
+        return Command.CREATE_GROUP_REQUEST;
     }
 }

@@ -1,15 +1,15 @@
 package com.raymond.comct;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import com.raymond.comct.channelHandler.LoginHandler;
-import com.raymond.comct.channelHandler.LoginResponseHandler;
-import com.raymond.comct.channelHandler.MessageResponseHandler;
-import com.raymond.comct.channelHandler.Spliter;
+import com.raymond.comct.channelHandler.*;
 import com.raymond.comct.codec.PacketCodec;
 import com.raymond.comct.codec.PacketDecoder;
 import com.raymond.comct.codec.PacketEncoder;
 import com.raymond.comct.codec.packet.LoginRequestPacket;
 import com.raymond.comct.codec.packet.MessageRequestPacket;
+import com.raymond.comct.command.ConsoleCommand;
+import com.raymond.comct.command.ConsoleCommandManager;
+import com.raymond.comct.command.LoginConsoleCommand;
 import com.raymond.comct.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -22,6 +22,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Scanner;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +42,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
@@ -68,31 +70,16 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                Scanner scanner = new Scanner(System.in);
-                if (SessionUtil.hasLogin(channel)) {
-                    System.out.println("请输入想要发送的用户id：");
-                    String toUserId = scanner.nextLine();
-                    System.out.println("请输入想要发送的消息：");
-                    String msg = scanner.nextLine();
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setToUserId(toUserId);
-                    messageRequestPacket.setMessage(msg);
-                    channel.writeAndFlush(messageRequestPacket);
-                } else {
-                    System.out.println("请输入用户id登录：");
-                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-                    String userId = scanner.nextLine();
-                    loginRequestPacket.setUserId(userId);
-                    loginRequestPacket.setPassword("pwd");
-                    channel.writeAndFlush(loginRequestPacket);
 
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (SessionUtil.hasLogin(channel)) {
+                    consoleCommandManager.exec(scanner, channel);
+                } else {
+                    loginConsoleCommand.exec(scanner, channel);
                 }
             }
         }).start();

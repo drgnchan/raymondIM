@@ -1,6 +1,6 @@
 package com.raymond.comct.codec.packet;
 
-import com.raymond.comct.codec.Command;
+import com.raymond.comct.command.Command;
 import lombok.Data;
 
 @Data

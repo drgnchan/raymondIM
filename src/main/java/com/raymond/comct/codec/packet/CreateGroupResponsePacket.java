@@ -3,14 +3,17 @@ package com.raymond.comct.codec.packet;
 import com.raymond.comct.command.Command;
 import lombok.Data;
 
-@Data
-public class LoginResponsePacket extends Packet {
+import java.util.List;
 
-    private String reason;
+@Data
+public class CreateGroupResponsePacket extends Packet {
+
     private Boolean success;
+    private List<String> usernames;
+    private String groupId;
 
     @Override
     public Byte getCommand() {
-        return Command.LOGIN_RESPONSE_COMMAND;
+        return Command.CREATE_GROUP_RESPONSE;
     }
 }

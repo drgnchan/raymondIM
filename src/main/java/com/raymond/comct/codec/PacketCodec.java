@@ -2,6 +2,7 @@ package com.raymond.comct.codec;
 
 import com.raymond.comct.codec.packet.Packet;
 import com.raymond.comct.codec.serialization.Serializer;
+import com.raymond.comct.command.Command;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
