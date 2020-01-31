@@ -24,7 +24,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
         System.out.println("请输入控制台命令：");
-        String command = scanner.next();
+        String command = scanner.nextLine();
 
         ConsoleCommand consoleCommand = this.consoleCommandMap.get(command);
 
