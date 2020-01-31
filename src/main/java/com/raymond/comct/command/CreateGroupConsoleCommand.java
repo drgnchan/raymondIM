@@ -14,7 +14,7 @@ public class CreateGroupConsoleCommand implements ConsoleCommand {
     public void exec(Scanner scanner, Channel channel) {
         CreateGroupRequestPacket createGroupRequestPacket = new CreateGroupRequestPacket();
         System.out.println("【拉人群聊】请输入要拉进来的用户id，用分隔符【" + USER_ID_SPLITTER + "】分开：");
-        String userIdsString = scanner.next();
+        String userIdsString = scanner.nextLine();
         String[] userIds = userIdsString.split(USER_ID_SPLITTER);
         createGroupRequestPacket.setUserIds(Arrays.asList(userIds));
 

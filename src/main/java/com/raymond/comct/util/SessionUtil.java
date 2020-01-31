@@ -14,6 +14,7 @@ public class SessionUtil {
     private static final Map<String, String> USER_ID_MAP_NAME = new ConcurrentHashMap<String, String>() {{
         put("123", "raymond");
         put("520", "arya");
+        put("666", "james");
     }};
 
     public static void markLogin(Channel channel) {

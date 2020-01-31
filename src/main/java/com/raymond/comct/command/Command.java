@@ -12,6 +12,8 @@ public interface Command {
     byte MSG_RESPONSE = 4;
     byte CREATE_GROUP_REQUEST = 5;
     byte CREATE_GROUP_RESPONSE = 6;
+    byte JOIN_GROUP_REQUEST = 7;
+    byte JOIN_GROUP_RESPONSE = 8;
     Map<Byte, Class<? extends Packet>> COMMAND_TO_PACKET_CLASS = new HashMap<Byte, Class<? extends Packet>>(){{
         put(Command.LOGIN_REQUEST_COMMAND, LoginRequestPacket.class);
         put(Command.LOGIN_RESPONSE_COMMAND, LoginResponsePacket.class);
@@ -19,5 +21,7 @@ public interface Command {
         put(Command.MSG_RESPONSE, MessageResponsePacket.class);
         put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        put(Command.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        put(Command.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
     }};
 }

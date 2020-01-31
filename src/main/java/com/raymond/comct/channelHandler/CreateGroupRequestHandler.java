@@ -3,6 +3,7 @@ package com.raymond.comct.channelHandler;
 import com.raymond.comct.Session;
 import com.raymond.comct.codec.packet.CreateGroupRequestPacket;
 import com.raymond.comct.codec.packet.CreateGroupResponsePacket;
+import com.raymond.comct.util.GroupUtil;
 import com.raymond.comct.util.SessionUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,6 +21,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
         List<String> userIds = msg.getUserIds();
         ChannelGroup channels = new DefaultChannelGroup(ctx.executor());
         List<String> usernames = new ArrayList<>();
+        String groupId = UUID.randomUUID().toString();
         for (String userId : userIds) {
             Channel channel = SessionUtil.getChannel(userId);
             if (channel == null) {
@@ -29,11 +31,14 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
                 channels.add(channel);
                 usernames.add(SessionUtil.getUsername(userId));
                 usernames.add(SessionUtil.getSession(ctx.channel()).getUsername());
+
+                //添加群聊
+                GroupUtil.addGroup(channels, groupId);
             }
         }
+        channels.add(ctx.channel());
         if (usernames.size() > 0) {
             //构建相应
-            String groupId = UUID.randomUUID().toString();
             CreateGroupResponsePacket createGroupResponsePacket = new CreateGroupResponsePacket();
             createGroupResponsePacket.setSuccess(true);
             createGroupResponsePacket.setUsernames(usernames);
@@ -42,6 +47,9 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
             channels.writeAndFlush(createGroupResponsePacket);
 
             System.out.println("创建群聊成功，groupId为：" + groupId + "；成员有：【" + String.join(",", usernames) + "】");
+        } else {
+            GroupUtil.addGroup(channels, groupId);
+            System.out.println("创建群聊成功，groupId为：" + groupId);
         }
     }
 }
