@@ -1,7 +1,6 @@
 package com.raymond.comct.channelHandler;
 
-import com.raymond.comct.codec.packet.LoginResponsePacket;
-import com.raymond.comct.util.LoginUtil;
+import com.raymond.comct.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (!LoginUtil.hasLogin(ctx.channel())) {
+        if (!SessionUtil.hasLogin(ctx.channel())) {
             ctx.channel().close();
         } else {
             ctx.pipeline().remove(this);
